@@ -1,0 +1,4 @@
+for now, one thing you have to do get the screenshots is:
+
+once you finish installing the requirements.txt, execute this command before using the app
+    playwright install chromium

@@ -1,2 +1,15 @@
-praw
+#Core
 python-dotenv
+
+#Scrapping
+praw
+
+#Screenshots
+playwright
+validators
+
+#Voice 
+gTTS
+requests
+playsound==1.2.2
+
