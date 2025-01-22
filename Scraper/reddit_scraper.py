@@ -1,5 +1,4 @@
 import praw
-from PIL import Image, ImageDraw, ImageFont
 from dotenv import load_dotenv
 import os
 
@@ -26,10 +25,10 @@ def fetch_trending_posts(subreddit_name="all"):
 
     print("\n\nTrending Posts: \n")
     for i, post in enumerate(trending_posts):
-        print(f"{i+1}: {post.title} : {post.url}") 
+        print(f"{i+1}: {post.title}") 
         
     userChoice = trending_posts[int(input("Enter your choice: ")) - 1]
     
     return userChoice
 
-fetch_trending_posts()
+# fetch_trending_posts() #lmao

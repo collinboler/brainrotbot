@@ -1,5 +1,9 @@
 .venv/
 .env
 Upload/
-# below module must remain private
-Audio/tiktok_tts/tiktok_voice/ 
+Assets/
+Audio/tiktok_tts/__pycache__
+Audio/google_tts/__pycache__
+Scraper/__pycache__
+
+# add the tiktok_voice folder in the venv packages

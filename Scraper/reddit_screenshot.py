@@ -1,7 +1,8 @@
 from playwright.sync_api import sync_playwright
-def take_reddit_screenshot(url, output_path='Assets/post_screenshot.png'):
+
+def take_reddit_screenshot(url, output_path='./Assets/post_screenshot.png'):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True) #to see the browser window, set headless=False
+        browser = p.chromium.launch(headless=False) #to see the browser window, set headless=False
         context = browser.new_context(
             viewport={'width': 1280, 'height': 720},
             color_scheme='light'
@@ -30,8 +31,3 @@ def take_reddit_screenshot(url, output_path='Assets/post_screenshot.png'):
             print(f"Error: {str(e)}")
         finally:
             browser.close()
-
-if __name__ == "__main__":
-    # Example usage
-    post_url = "https://www.reddit.com/r/Python/comments/1ch45ay/why_is_python_still_popular_despite_being_so_slow/"
-    take_reddit_screenshot(post_url, "reddit_post.png")

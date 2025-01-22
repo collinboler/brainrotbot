@@ -98,7 +98,7 @@ from tiktok_voice import tts, Voice
 # FEMALE_EMOTIONAL
 # ----------------------------------------
 
-def text_to_speech(text, model='US_FEMALE_1',output='audio.mp3'):
-    tts(text, eval(f'Voice.{model}'), output_file_path=output, play_sound=False)
-    
-text_to_speech("Hello, how are you doing today?")
+
+#make it so that we can choose the voice model in the main.py
+def text_to_speech(text, output='./Assets/reddit_audio.mp3'):
+    tts(text, voice=Voice.US_FEMALE_1, output_file_path=output, play_sound=False)
