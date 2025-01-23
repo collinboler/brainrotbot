@@ -4,7 +4,9 @@ Upload/
 Assets/
 Audio/tiktok_tts/__pycache__
 Audio/google_tts/__pycache__
+Edit/__pycache__
+# Edit/Base/
 Scraper/__pycache__
-Finalrender/
+Results/
 
 # add the tiktok_voice folder in the venv packages

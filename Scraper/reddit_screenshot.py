@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
 
-def take_reddit_screenshot(url, output_path='./Assets/post_screenshot.png'):
+def take_reddit_screenshot(url, output_path='./Assets/reddit_screenshot.png'):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False) #to see the browser window, set headless=False
         context = browser.new_context(
@@ -26,6 +26,7 @@ def take_reddit_screenshot(url, output_path='./Assets/post_screenshot.png'):
 
             # Close the browser
             browser.close()
+            return output_path
             
         except Exception as e:
             print(f"Error: {str(e)}")

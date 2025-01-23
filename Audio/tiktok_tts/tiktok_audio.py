@@ -102,3 +102,4 @@ from tiktok_voice import tts, Voice
 #make it so that we can choose the voice model in the main.py
 def text_to_speech(text, output='./Assets/reddit_audio.mp3'):
     tts(text, voice=Voice.US_FEMALE_1, output_file_path=output, play_sound=False)
+    return output
