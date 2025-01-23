@@ -1,4 +1,5 @@
 from tiktok_voice import tts, Voice
+import re
 
 # ----------- all voices -------------
 # GHOSTFACE
@@ -98,8 +99,25 @@ from tiktok_voice import tts, Voice
 # FEMALE_EMOTIONAL
 # ----------------------------------------
 
+def clean_text(text):
+    """
+    Cleans the input text by:
+    1. Removing special characters (except basic punctuation)
+    2. Replacing newlines with spaces
+    3. Trimming extra spaces
+    """
+    # Replace newlines and multiple spaces with a single space
+    text = re.sub(r'\s+', ' ', text)
+    
+    # Remove unwanted special characters (keep basic punctuation)
+    text = re.sub(r'[^\w\s.,!?\-]', '', text)
+    
+    # Trim leading/trailing spaces
+    return text.strip()
+
 
 #make it so that we can choose the voice model in the main.py
 def text_to_speech(text, output='./Assets/reddit_audio.mp3'):
-    tts(text, voice=Voice.US_FEMALE_1, output_file_path=output, play_sound=False)
+    cleaned_text = clean_text(text)
+    tts(cleaned_text, voice=Voice.US_MALE_1, output_file_path=output, play_sound=False)
     return output

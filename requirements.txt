@@ -13,3 +13,7 @@ gTTS
 requests
 playsound==1.2.2
 
+#Video Editing
+moviepy
+imageio
+imageio-ffmpeg
