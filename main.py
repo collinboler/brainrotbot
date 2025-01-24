@@ -1,6 +1,8 @@
 from Scraper.reddit_scraper import fetch_trending_posts 
 from Scraper.reddit_screenshot import take_reddit_screenshot
-from Audio.tiktok_tts.tiktok_audio import text_to_speech
+# from Audio.tiktok_tts.tiktok_audio import text_to_speech
+from Audio.kokoro_tts.kokoro_audio import text_to_speech
+
 from Edit.edit import trim_and_join
 import re
 import os
@@ -16,7 +18,7 @@ def main():
     
     title = re.sub(r'[^\w\s]', '', post.title) # Remove special characters
     content = re.sub(r'[\n\(\)]', '.', post.selftext) # Remove newlines and brackets
-    audio = text_to_speech((title + ' . ' + content))
+    audio = text_to_speech(text_input=(title + ' . ' + content))
     # print("Audio generated")
     
     
