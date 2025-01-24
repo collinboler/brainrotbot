@@ -1,35 +1,32 @@
-from Scraper.reddit_scraper import fetch_trending_posts 
-from Scraper.reddit_screenshot import take_reddit_screenshot
-# from Audio.tiktok_tts.tiktok_audio import text_to_speech
-from Audio.kokoro_tts.kokoro_audio import text_to_speech
-
-from Edit.edit import trim_and_join
-import re
 import os
+os.environ['PYTHONDONTWRITEBYTECODE'] = '1' # Prevents writing pycache files
+
+from Utils import BrainRotBot
+import re
 import shutil
 
 def main():
-    post = fetch_trending_posts()
+    # Getting the Post
+    post = BrainRotBot.get_posts(no_of_posts=10)
     print(post.title)
     
-    os.system('cls' if os.name == 'nt' else 'clear')
-    screenshot = take_reddit_screenshot(post.url)
-    print("Screenshot taken")
+    os.system('cls' if os.name == 'nt' else 'clear') # Clear the console
     
-    title = re.sub(r'[^\w\s]', '', post.title) # Remove special characters
-    content = re.sub(r'[\n\(\)]', '.', post.selftext) # Remove newlines and brackets
-    audio = text_to_speech(text_input=(title + ' . ' + content))
-    # print("Audio generated")
+    # Getting the Screenshot
+    screenshot = BrainRotBot.get_screenshot(post.url)
+    print("\nScreenshot taken!")    
     
+    # Getting the Audio 
+    cleaned_title = re.sub(r'[^\w\s]', '', post.title)
+    audio = BrainRotBot.get_audio(post.title + post.selftext)
+    print("\nAudio generated!")    
     
-    #merged
-    cleaned_title = re.sub(r'[^\w\s]', '', title)
-    cleaned_title = ''.join(word.capitalize() for word in cleaned_title.split())
-    result = trim_and_join(base_video_path='./Edit/Base/base_video.mp4', base_audio_path=audio, image_path=screenshot, output=f'{cleaned_title}')
+    # Merging the Video
+    result = BrainRotBot.merge(audio, screenshot, cleaned_title)
     
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear') # Clear the console
     
-    print(f'Video saved to {result}')
+    print(f'\nVideo saved to {result}')
     
     assets_folder = './Assets'
 
@@ -38,5 +35,6 @@ def main():
         print(f'Deleted everything in the {assets_folder} folder')
     else:
         print(f'{assets_folder} folder does not exist')
+        
 main()
 

@@ -2,11 +2,10 @@
 .env
 Upload/
 Assets/
-Audio/tiktok_tts/__pycache__
-Audio/google_tts/__pycache__
-Edit/__pycache__
 Edit/Base/base_video.mp4
-Scraper/__pycache__
 Results/
 
+__pycache__/
+*.py[cod]
+*$py.class
 # add the tiktok_voice folder in the venv packages

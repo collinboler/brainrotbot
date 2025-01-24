@@ -1,0 +1,1 @@
+Please put a base video here with the name `base_video.mp4`, which will be used in the background of the video generated.
