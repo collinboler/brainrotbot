@@ -12,8 +12,7 @@ validators
 gTTS
 requests
 playsound==1.2.2
+gradio_client
 
 #Video Editing
 moviepy
-imageio
-imageio-ffmpeg

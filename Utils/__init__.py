@@ -1,4 +1,4 @@
-from Utils.Scraper.reddit_scraper import fetch_trending_posts
+from Utils.Scraper.reddit_scraper import fetch_post
 from Utils.Scraper.reddit_screenshot import take_reddit_screenshot
 from Utils.Audio.kokoro_tts.kokoro_audio import text_to_speech
 from Utils.Edit.edit import trim_and_join
@@ -10,7 +10,7 @@ class BrainRotBot:
     
     Methods
     -------
-    get_posts(no_of_posts=10):
+    get_post(no_of_posts=10):
         Fetches trending posts from a source.
     get_screenshot(post_url):
         Takes a screenshot of a given Reddit post.
@@ -23,7 +23,7 @@ class BrainRotBot:
         pass
 
     @staticmethod
-    def get_posts(subreddit_name="", no_of_posts=10):
+    def get_post(subreddit_name="", no_of_posts=10):
         """
         Fetches trending posts from a specified subreddit.
         
@@ -39,7 +39,7 @@ class BrainRotBot:
         list
             A list of trending posts
         """
-        return fetch_trending_posts(subreddit_name, no_of_posts)
+        return fetch_post(subreddit_name, no_of_posts)
 
     @staticmethod
     def get_screenshot(post_url):

@@ -2,10 +2,10 @@
 .env
 Upload/
 Assets/
-Edit/Base/base_video.mp4
+Utils/Edit/Base/base_video.mp4
 Results/
 
 __pycache__/
 *.py[cod]
 *$py.class
-# add the tiktok_voice folder in the venv packages
+# add the tiktok_voice folder in the venv site packages

@@ -15,13 +15,13 @@ reddit = praw.Reddit(
     user_agent=USER_AGENT
 )
 
-def fetch_trending_posts(subreddit_name="", no_of_posts=10):
+def fetch_post(subreddit_name="", no_of_posts=10):
     if not (10 <= no_of_posts <= 50):
         raise ValueError("Number of posts must be greater than 10 and less than 50")
     
     if not subreddit_name:
-        print("Enter subreddit name from the options below or type your own:")
-        print("Options: relationship_advice, AmItheAsshole, RelationshipMemes, AskMen, confession, AskReddit, funny, todayilearned, worldnews, movies")
+        print("Enter subreddit name: ")
+        print("Few options:\nrelationship_advice    AmItheAsshole   RelationshipMemes   AskMen  confession")
         subreddit_name = input()  # pass the sub name here
     subreddit = reddit.subreddit(subreddit_name)
 
