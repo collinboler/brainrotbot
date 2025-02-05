@@ -1,6 +1,6 @@
 from Utils.Scraper.reddit_scraper import fetch_post
 from Utils.Scraper.reddit_screenshot import take_reddit_screenshot
-from Utils.Audio.kokoro_tts.kokoro_audio import text_to_speech
+from Utils.Audio.google_tts.googleaudio import text_to_speech
 from Utils.Edit.edit import trim_and_join
 
 class BrainRotBot:
@@ -59,7 +59,7 @@ class BrainRotBot:
         return take_reddit_screenshot(post_url)
     
     @staticmethod
-    def get_audio(text, voice_name='am_adam', output_path='Assets/reddit_audio.wav'):
+    def get_audio(text, output_path='Assets/reddit_audio.wav'):
         """
         Converts the given text to speech.
         
@@ -67,8 +67,6 @@ class BrainRotBot:
         ----------
         text : str
             Text to convert to speech
-        voice_name : str, optional
-            Name of the voice to use (default is 'am_adam')
         output_path : str, optional
             Path to save the audio file (default is 'Assets/reddit_audio.wav')
         
@@ -77,7 +75,7 @@ class BrainRotBot:
         str
             Path to the generated audio file
         """
-        return text_to_speech(text, voice_name, output_path)
+        return text_to_speech(text, output=output_path)
     
     @staticmethod
     def merge(audio_path, image_path, output_path, base_video_path='./Utils/Edit/Base/base_video.mp4'):
