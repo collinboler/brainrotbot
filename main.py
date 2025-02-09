@@ -7,7 +7,7 @@ import shutil
 
 def main():
     # Getting the Post
-    post = BrainRotBot.get_post(no_of_posts=10)
+    post = BrainRotBot.get_post(no_of_posts=25)
     print(post.title)
     
     os.system('cls' if os.name == 'nt' else 'clear') # Clear the console

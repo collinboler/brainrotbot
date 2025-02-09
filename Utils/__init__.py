@@ -1,3 +1,4 @@
+import os
 from Utils.Scraper.reddit_scraper import fetch_post
 from Utils.Scraper.reddit_screenshot import take_reddit_screenshot
 from Utils.Audio.google_tts.googleaudio import text_to_speech
@@ -98,6 +99,8 @@ class BrainRotBot:
         str
             Path to the merged video file
         """
+        # Create Results directory if it doesn't exist
+        os.makedirs('Results', exist_ok=True)
         return trim_and_join(base_video_path, base_audio_path=audio_path, image_path=image_path, output=f'Results/{output_path}')
     
     

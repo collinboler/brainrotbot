@@ -15,7 +15,7 @@ reddit = praw.Reddit(
     user_agent=USER_AGENT
 )
 
-def fetch_post(subreddit_name="", no_of_posts=10):
+def fetch_post(subreddit_name="", no_of_posts=25):
     if not (10 <= no_of_posts <= 50):
         raise ValueError("Number of posts must be greater than 10 and less than 50")
     
@@ -27,7 +27,7 @@ def fetch_post(subreddit_name="", no_of_posts=10):
 
     trending_posts = []
     for post in subreddit.hot(limit=100):  # Fetch more posts to allow for random selection
-        if post.is_self and not post.over_18 and len(post.selftext.split()) >= 50 and len(post.selftext.split()) < 250:  # Filter posts with selftext containing at least 50 words and exclude NSFW posts
+        if post.is_self and not post.over_18 and len(post.selftext.split()) >= 150 and len(post.selftext.split()) < 250:  # Filter posts with selftext containing at least 50 words and exclude NSFW posts
             trending_posts.append(post)
 
     random.shuffle(trending_posts)  # Shuffle the posts to randomize the order
