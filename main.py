@@ -4,6 +4,7 @@ os.environ['PYTHONDONTWRITEBYTECODE'] = '1' # Prevents writing pycache files
 from Utils import BrainRotBot
 import re
 import shutil
+import sys
 
 def main():
     # Getting the Post
@@ -14,6 +15,9 @@ def main():
     
     # Getting the Screenshot
     screenshot = BrainRotBot.get_screenshot(post.url)
+    if screenshot is None:
+        print("\nFailed to capture screenshot. Exiting...")
+        sys.exit(1)
     print("\nScreenshot taken!")    
     
     # Getting the Audio 

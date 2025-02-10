@@ -2,8 +2,12 @@ from playwright.sync_api import sync_playwright
 from PIL import Image
 import io
 import time
+import os
 
 def take_reddit_screenshot(url, output_path='./Assets/reddit_screenshot.png'):
+    # Ensure the Assets directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context(
@@ -14,7 +18,7 @@ def take_reddit_screenshot(url, output_path='./Assets/reddit_screenshot.png'):
         page = context.new_page()
         
         try:
-            page.goto(url, timeout=6000)
+            page.goto(url, timeout=60000)  # Increased timeout to 60 seconds
             time.sleep(2)  # Give the page a moment to load
             
             try:
@@ -24,7 +28,7 @@ def take_reddit_screenshot(url, output_path='./Assets/reddit_screenshot.png'):
             
             # Wait for the main post element first
             post_selector = 'shreddit-post'
-            page.wait_for_selector(post_selector, timeout=3000)
+            page.wait_for_selector(post_selector, timeout=30000)  # Increased timeout to 30 seconds
             
             # Now look for our specific elements within the post
             post = page.query_selector(post_selector)
