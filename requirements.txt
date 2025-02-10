@@ -7,6 +7,7 @@ praw
 #Screenshots
 playwright
 validators
+Pillow
 
 #Voice 
 gTTS
