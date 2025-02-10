@@ -16,3 +16,7 @@ gradio_client
 
 #Video Editing
 moviepy
+
+#Captions
+assemblyai
+pysrt
