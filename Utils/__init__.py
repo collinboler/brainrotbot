@@ -22,8 +22,18 @@ class BrainRotBot:
     merge(audio_path, image_path, output_path, base_video_path='./Edit/Base/base_video.mp4'):
         Trims and joins the given video clips.
     """
-    def __init__(self):
-        pass
+    # Class variable to store voice preference
+    voice_gender = None
+    
+    @staticmethod
+    def ask_gender():
+        """Ask for gender preference and return corresponding voice."""
+        while True:
+            gender = input("male (m) or female (f)? ").lower().strip()
+            if gender in ['m', 'f']:
+                BrainRotBot.voice_gender = 'ash' if gender == 'm' else 'sage'
+                return BrainRotBot.voice_gender
+            print("Please enter 'm' for male or 'f' for female.")
 
     @staticmethod
     def get_post(subreddit_name="", no_of_posts=10):
@@ -59,6 +69,10 @@ class BrainRotBot:
         str
             Path to the screenshot image
         """
+        # Ask for gender preference if not already set
+        if BrainRotBot.voice_gender is None:
+            BrainRotBot.ask_gender()
+            
         return take_reddit_screenshot(post_url)
     
     @staticmethod
@@ -88,10 +102,12 @@ class BrainRotBot:
         if tts_service == 'elevenlabs':
             return eleven_labs_tts(text, output=output_path, voice_id=kwargs.get('voice_id'))
         elif tts_service == 'openai':
+            # Use the stored voice gender preference
+            voice = kwargs.get('voice', BrainRotBot.voice_gender)
             return openai_tts(
                 text, 
                 output=output_path, 
-                voice=kwargs.get('voice'),  # Will randomly choose between 'ash' and 'sage' if not specified
+                voice=voice,
                 model=kwargs.get('model', 'tts-1')
             )
         else:  # default to google
