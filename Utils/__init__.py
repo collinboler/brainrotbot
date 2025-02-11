@@ -1,7 +1,8 @@
 import os
 from Utils.Scraper.reddit_scraper import fetch_post
 from Utils.Scraper.reddit_screenshot import take_reddit_screenshot
-from Utils.Audio.google_tts.googleaudio import text_to_speech
+from Utils.Audio.google_tts.googleaudio import text_to_speech as google_tts
+from Utils.Audio.eleven_labs.elevenaudio import text_to_speech as eleven_labs_tts
 from Utils.Edit.edit import trim_and_join
 
 class BrainRotBot:
@@ -15,8 +16,8 @@ class BrainRotBot:
         Fetches trending posts from a source.
     get_screenshot(post_url):
         Takes a screenshot of a given Reddit post.
-    get_audio(text, voice_name='am_adam', output_path='Assets/reddit_audio.wav'):
-        Converts the given text to speech.
+    get_audio(text, voice_name='am_adam', output_path='Assets/reddit_audio.wav', use_eleven_labs=False):
+        Converts the given text to speech using either Google TTS or Eleven Labs.
     merge(audio_path, image_path, output_path, base_video_path='./Edit/Base/base_video.mp4'):
         Trims and joins the given video clips.
     """
@@ -60,9 +61,9 @@ class BrainRotBot:
         return take_reddit_screenshot(post_url)
     
     @staticmethod
-    def get_audio(text, output_path='Assets/reddit_audio.wav'):
+    def get_audio(text, output_path='Assets/reddit_audio.wav', use_eleven_labs=True, voice_id=None):
         """
-        Converts the given text to speech.
+        Converts the given text to speech using either Google TTS or Eleven Labs.
         
         Parameters
         ----------
@@ -70,13 +71,20 @@ class BrainRotBot:
             Text to convert to speech
         output_path : str, optional
             Path to save the audio file (default is 'Assets/reddit_audio.wav')
+        use_eleven_labs : bool, optional
+            Whether to use Eleven Labs instead of Google TTS (default is False)
+        voice_id : str, optional
+            Voice ID for Eleven Labs (only used if use_eleven_labs is True)
         
         Returns
         -------
         str
             Path to the generated audio file
         """
-        return text_to_speech(text, output=output_path)
+        if use_eleven_labs:
+            return eleven_labs_tts(text, output=output_path, voice_id=voice_id)
+        else:
+            return google_tts(text, output=output_path)
     
     @staticmethod
     def merge(audio_path, image_path, output_path, base_video_path='./Utils/Edit/Base/base_video.mp4'):

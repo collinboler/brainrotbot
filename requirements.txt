@@ -1,5 +1,6 @@
 #Core
 python-dotenv
+requests
 
 #Scrapping
 praw
@@ -11,7 +12,6 @@ Pillow
 
 #Voice 
 gTTS
-requests
 playsound==1.2.2
 gradio_client
 
