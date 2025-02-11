@@ -39,10 +39,10 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output):
         txt_clip = TextClip(
             text=sub.text,
             font=font_path,
-            font_size=70,
+            font_size=12,
             color='white',
             stroke_color='black',
-            stroke_width=4,
+            stroke_width=1,
             size=(text_width, None),  # Width fixed, height automatic
             method='caption'
         ).with_duration(duration).with_start(start_time)
