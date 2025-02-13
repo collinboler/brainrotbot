@@ -17,7 +17,7 @@ class BrainRotBot:
         Fetches trending posts from a source.
     get_screenshot(post_url):
         Takes a screenshot of a given Reddit post.
-    get_audio(text, output_path='Assets/reddit_audio.wav', tts_service='openai', **kwargs):
+    get_audio(text, title="", output_path='Assets/reddit_audio.wav', tts_service='openai', **kwargs):
         Converts the given text to speech using various TTS services.
     merge(audio_path, image_path, output_path, title_text, base_video_path='./Utils/Edit/Base/base_video.mp4'):
         Trims and joins the given video clips.
@@ -76,7 +76,7 @@ class BrainRotBot:
         return take_reddit_screenshot(post_url)
     
     @staticmethod
-    def get_audio(text, output_path='Assets/reddit_audio.wav', tts_service='openai', **kwargs):
+    def get_audio(text, title="", output_path='Assets/reddit_audio.wav', tts_service='openai', **kwargs):
         """
         Converts the given text to speech using various TTS services.
         
@@ -84,6 +84,8 @@ class BrainRotBot:
         ----------
         text : str
             Text to convert to speech
+        title : str, optional
+            The title of the post (to ensure it's spoken completely)
         output_path : str, optional
             Path to save the audio file (default is 'Assets/reddit_audio.wav')
         tts_service : str, optional
@@ -99,6 +101,13 @@ class BrainRotBot:
         str
             Path to the generated audio file
         """
+        # For OpenAI TTS, ensure the title is spoken completely by appending it
+        if tts_service == 'openai' and title:
+            # Split the text into first 100 characters and the rest
+            first_part = text[:100]
+            if title in first_part and len(title) > 50:  # If title is in first part and long
+                text = title + ". " + text  # Append title with a pause
+        
         if tts_service == 'elevenlabs':
             return eleven_labs_tts(text, output=output_path, voice_id=kwargs.get('voice_id'))
         elif tts_service == 'openai':

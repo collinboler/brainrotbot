@@ -22,7 +22,7 @@ def main():
     
     # Getting the Audio 
     cleaned_title = re.sub(r'[^\w\s]', '', post.title)
-    audio = BrainRotBot.get_audio(post.title + post.selftext)
+    audio = BrainRotBot.get_audio(post.title + post.selftext, title=post.title)
     print("\nAudio generated!")    
     
     # Merging the Video
