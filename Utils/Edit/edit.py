@@ -5,11 +5,24 @@ import os
 
 def find_title_end_index(subs, title_text):
     """Find the index of the subtitle that contains the end of the title"""
+    # Clean up the title for comparison
+    clean_title = title_text.strip().lower()
+    
+    # Build text progressively to find complete title
     combined_text = ""
+    start_idx = None
+    
     for i, sub in enumerate(subs):
-        combined_text += sub.text + " "
-        if title_text.strip() in combined_text:
-            return i
+        combined_text += sub.text.lower() + " "
+        
+        # If we haven't found the start of the title yet, check if this subtitle contains it
+        if start_idx is None and clean_title.startswith(combined_text.strip()):
+            start_idx = i
+            
+        # If we've found the complete title
+        if clean_title in combined_text:
+            return i  # Return the index where the complete title ends
+            
     return 0  # Default to first subtitle if title not found
 
 def get_title_end_time(subs, title_end_idx):
