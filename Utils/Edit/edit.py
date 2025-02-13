@@ -116,7 +116,7 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
             color='white',
             stroke_color='black',
             stroke_width=4,
-            size=(text_width, None),  # Width fixed, height automatic
+            size=(text_width, clip.h),  # Width fixed, height set to video height
             method='caption'
         ).with_duration(duration).with_start(start_time)
         
