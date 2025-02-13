@@ -19,7 +19,7 @@ class BrainRotBot:
         Takes a screenshot of a given Reddit post.
     get_audio(text, output_path='Assets/reddit_audio.wav', tts_service='openai', **kwargs):
         Converts the given text to speech using various TTS services.
-    merge(audio_path, image_path, output_path, base_video_path='./Edit/Base/base_video.mp4'):
+    merge(audio_path, image_path, output_path, title_text, base_video_path='./Utils/Edit/Base/base_video.mp4'):
         Trims and joins the given video clips.
     """
     # Class variable to store voice preference
@@ -114,7 +114,7 @@ class BrainRotBot:
             return google_tts(text, output=output_path)
     
     @staticmethod
-    def merge(audio_path, image_path, output_path, base_video_path='./Utils/Edit/Base/base_video.mp4'):
+    def merge(audio_path, image_path, output_path, title_text="", base_video_path='./Utils/Edit/Base/base_video.mp4'):
         """
         Trims and joins the given video clips.
         
@@ -126,6 +126,8 @@ class BrainRotBot:
             Path to the image file
         output_path : str
             Path to save the output video
+        title_text : str
+            The title text to find in the subtitles
         base_video_path : str, optional
             Path to the base video file (default is './Edit/Base/base_video.mp4')
         
@@ -136,6 +138,6 @@ class BrainRotBot:
         """
         # Create Results directory if it doesn't exist
         os.makedirs('Results', exist_ok=True)
-        return trim_and_join(base_video_path, base_audio_path=audio_path, image_path=image_path, output=f'Results/{output_path}')
+        return trim_and_join(base_video_path, base_audio_path=audio_path, image_path=image_path, output=f'Results/{output_path}', title_text=title_text)
     
     

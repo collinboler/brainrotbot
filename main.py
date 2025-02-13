@@ -26,7 +26,7 @@ def main():
     print("\nAudio generated!")    
     
     # Merging the Video
-    result = BrainRotBot.merge(audio, screenshot, cleaned_title)
+    result = BrainRotBot.merge(audio, screenshot, cleaned_title, post.title)
     
     os.system('cls' if os.name == 'nt' else 'clear') # Clear the console
     
