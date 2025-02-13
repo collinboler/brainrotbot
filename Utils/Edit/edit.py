@@ -2,34 +2,71 @@ from moviepy import VideoFileClip, AudioFileClip, ImageClip, CompositeVideoClip,
 from .captions import create_captions
 import pysrt
 import os
+import re
+
+def normalize_text(text):
+    """Normalize text for comparison by removing special chars and converting numbers to words"""
+    # Convert to lowercase and remove special characters
+    text = text.lower()
+    # Replace common variations
+    replacements = {
+        '(': '',
+        ')': '',
+        '[': '',
+        ']': '',
+        'f)': 'female',
+        'm)': 'male',
+        '20f': '20 female',
+        '20m': '20 male',
+        '(f)': 'female',
+        '(m)': 'male',
+        'f': 'female',
+        'm': 'male',
+        '&': 'and',
+        '+': 'and',
+        '/': ' ',
+        '\\': ' ',
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    
+    # Remove any remaining special characters and extra spaces
+    text = re.sub(r'[^\w\s]', ' ', text)
+    return ' '.join(text.split())
 
 def find_title_end_index(subs, title_text):
     """Find the index of the subtitle that contains the end of the title"""
-    # Clean up the title for comparison
-    clean_title = title_text.strip().lower()
+    # Normalize the title text
+    clean_title = normalize_text(title_text)
+    title_words = clean_title.split()
     
     # Build text progressively to find complete title
     combined_text = ""
-    start_idx = None
+    last_matching_idx = 0
     
     for i, sub in enumerate(subs):
-        combined_text += sub.text.lower() + " "
+        # Normalize the subtitle text
+        word = normalize_text(sub.text)
+        combined_text += word + " "
         
-        # If we haven't found the start of the title yet, check if this subtitle contains it
-        if start_idx is None and clean_title.startswith(combined_text.strip()):
-            start_idx = i
-            
-        # If we've found the complete title
-        if clean_title in combined_text:
-            return i  # Return the index where the complete title ends
-            
-    return 0  # Default to first subtitle if title not found
+        # Check if we have the complete title
+        if all(title_word in combined_text for title_word in title_words):
+            return i
+        
+        # Update last matching index if we have a partial match
+        for title_word in title_words:
+            if title_word in word:
+                last_matching_idx = i
+    
+    # If we didn't find the complete title, return the last matching index
+    # or a reasonable minimum
+    return max(last_matching_idx, min(8, len(subs) - 1))
 
 def get_title_end_time(subs, title_end_idx):
     """Get the end time of the title in seconds"""
     if title_end_idx >= 0 and title_end_idx < len(subs):
-        # Get the end time of the title subtitle
-        return subs[title_end_idx].end.ordinal / 1000
+        # Add a larger buffer to the end time
+        return (subs[title_end_idx].end.ordinal / 1000) + 0.5  # Add 500ms buffer
     return 3.0  # Default to 3 seconds if title not found
 
 def trim_and_join(base_video_path, base_audio_path, image_path, output, title_text=""):
@@ -52,7 +89,7 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
 
     # Create image clip that only shows during title
     image = ImageClip(f"{image_path}")
-    image = image.with_duration(title_end_time).with_position(("center", clip.h * 1/3))
+    image = image.with_duration(title_end_time).with_position(("center", "center"))
 
     # Trim video to match audio duration
     clip = clip.subclipped(end_time=audioclip.duration)
@@ -75,7 +112,7 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
         txt_clip = TextClip(
             text=sub.text,
             font=font_path,
-            font_size=70,
+            font_size=65,
             color='white',
             stroke_color='black',
             stroke_width=4,
