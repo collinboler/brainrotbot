@@ -12,21 +12,18 @@ def find_title_end_index(subs, title_text):
             return i
     return 0  # Default to first subtitle if title not found
 
+def get_title_end_time(subs, title_end_idx):
+    """Get the end time of the title in seconds"""
+    if title_end_idx >= 0 and title_end_idx < len(subs):
+        # Get the end time of the title subtitle
+        return subs[title_end_idx].end.ordinal / 1000
+    return 3.0  # Default to 3 seconds if title not found
+
 def trim_and_join(base_video_path, base_audio_path, image_path, output, title_text=""):
     clip = VideoFileClip(f"{base_video_path}")
     audioclip = AudioFileClip(f"{base_audio_path}")
 
-    image = ImageClip(f"{image_path}")
-    audio_duration = audioclip.duration
-    
-    image = image.with_duration(audio_duration).with_position(("center", clip.h * 1/3))
-
-    clip = clip.subclipped(end_time = audio_duration)
-
-    new_audioclip = CompositeAudioClip([audioclip])
-    clip.audio = new_audioclip
-
-    # Generate captions
+    # Generate captions first to get title timing
     srt_path = create_captions(base_audio_path)
     print("srt_path: " + srt_path)
     subs = pysrt.open(srt_path)
@@ -35,6 +32,18 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     # Find where the title ends in the subtitles
     title_end_idx = find_title_end_index(subs, title_text)
     print(f"Title ends at subtitle index: {title_end_idx}")
+    
+    # Get the exact time when title ends
+    title_end_time = get_title_end_time(subs, title_end_idx)
+    print(f"Title ends at: {title_end_time} seconds")
+
+    # Create image clip that only shows during title
+    image = ImageClip(f"{image_path}")
+    image = image.with_duration(title_end_time).with_position(("center", clip.h * 1/3))
+
+    # Trim video to match audio duration
+    clip = clip.subclipped(end_time=audioclip.duration)
+    clip.audio = CompositeAudioClip([audioclip])
     
     # Create text clips for each subtitle (skipping until after the title)
     txt_clips = []
@@ -65,7 +74,7 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
         txt_clip = txt_clip.with_position('center')
         txt_clips.append(txt_clip)
 
-    # Combine all clips: background video, image overlay, and text captions
+    # Combine all clips: background video, title image overlay, and text captions
     final = CompositeVideoClip([clip, image] + txt_clips, size=clip.size)
 
     output_path = output + '.mp4'
