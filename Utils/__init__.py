@@ -6,6 +6,19 @@ from Utils.Audio.eleven_labs.elevenaudio import text_to_speech as eleven_labs_tt
 from Utils.Audio.openai_tts.openai_audio import text_to_speech as openai_tts
 from Utils.Edit.edit import trim_and_join
 
+def remove_title_from_text(title, text):
+    """Remove the title from the beginning of the text if it exists"""
+    # Clean up both strings for comparison
+    clean_title = title.strip().lower()
+    clean_text = text.strip().lower()
+    
+    # If text starts with the title, remove it
+    if clean_text.startswith(clean_title):
+        # Remove the title and any following punctuation
+        text = text[len(title):].lstrip(" .,!?")
+    
+    return text
+
 class BrainRotBot:
     """
     A bot that fetches trending posts, takes screenshots of Reddit posts, converts text to speech, 
@@ -101,12 +114,12 @@ class BrainRotBot:
         str
             Path to the generated audio file
         """
-        # For OpenAI TTS, ensure the title is spoken completely by appending it
+        # For OpenAI TTS, ensure the title is spoken once at the beginning
         if tts_service == 'openai' and title:
-            # Split the text into first 100 characters and the rest
-            first_part = text[:100]
-            if title in first_part and len(title) > 50:  # If title is in first part and long
-                text = title + ". " + text  # Append title with a pause
+            # Remove the title from the main text if it exists at the start
+            content = remove_title_from_text(title, text)
+            # Combine title and content with a pause
+            text = f"{title}. {content}"
         
         if tts_service == 'elevenlabs':
             return eleven_labs_tts(text, output=output_path, voice_id=kwargs.get('voice_id'))
