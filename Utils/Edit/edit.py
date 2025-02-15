@@ -93,7 +93,8 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
 
     # Trim video to match audio duration
     clip = clip.subclipped(end_time=audioclip.duration)
-    clip.audio = CompositeAudioClip([audioclip])
+    # Set the audio with the correct fps
+    clip = clip.with_audio(CompositeAudioClip([audioclip]))
     
     # Create text clips for each subtitle (skipping until after the title)
     txt_clips = []
@@ -128,7 +129,13 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     final = CompositeVideoClip([clip, image] + txt_clips, size=clip.size)
 
     output_path = output + '.mp4'
-    final.write_videofile(output_path, fps=60)
+    final.write_videofile(
+        output_path, 
+        fps=60,
+        codec='libx264',
+        audio_codec='aac',
+        audio_bitrate='192k'
+    )
     return output_path
     
     
