@@ -104,8 +104,8 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     
     # Process subtitles after the title
     for sub in subs[title_end_idx + 1:]:
-        start_time = sub.start.ordinal / 1000  # Convert to seconds
-        end_time = sub.end.ordinal / 1000
+        start_time = (sub.start.ordinal / 1000) + 0.1  # Add 0.1s delay after title
+        end_time = (sub.end.ordinal / 1000) + 0.1  # Also shift end time by 0.1s
         duration = end_time - start_time
         
         # Create simple centered text clip
