@@ -19,7 +19,7 @@ def fetch_post(subreddit_name="", no_of_posts=25):
     if not (10 <= no_of_posts <= 50):
         raise ValueError("Number of posts must be greater than 10 and less than 50")
     
-    default_subreddits = ["relationship_advice", "AmItheAsshole", "RelationshipMemes", "AskMen", "confession"]
+    default_subreddits = ["relationship_advice", "AmItheAsshole", "RelationshipMemes", "AskMen", "confession", "TIFU"]
     
     while not subreddit_name:
         print("Enter subreddit name: ")
