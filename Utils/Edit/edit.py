@@ -3,6 +3,7 @@ from .captions import create_captions
 import pysrt
 import os
 import re
+import random
 
 def normalize_text(text):
     """Normalize text for comparison by removing special chars and converting numbers to words"""
@@ -91,10 +92,14 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     image = ImageClip(f"{image_path}")
     image = image.with_duration(title_end_time).with_position(("center", "center"))
 
-    # Trim video to match audio duration
-    clip = clip.subclipped(end_time=audioclip.duration)
-    # Set the audio with the correct fps
-    clip = clip.with_audio(CompositeAudioClip([audioclip]))
+    # Calculate random start time for background video
+    max_start = max(0, clip.duration - audioclip.duration)
+    start_time = random.uniform(0, max_start) if max_start > 0 else 0
+    end_time = start_time + audioclip.duration
+
+    # Trim video to match audio duration, starting from random position
+    clip = clip.subclipped(start_time, end_time)
+    clip.audio = CompositeAudioClip([audioclip])
     
     # Create text clips for each subtitle (skipping until after the title)
     txt_clips = []
@@ -105,8 +110,8 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     
     # Process subtitles after the title
     for sub in subs[title_end_idx + 1:]:
-        start_time = (sub.start.ordinal / 1000)   # Add 0.1s delay after title
-        end_time = (sub.end.ordinal / 1000)  # Also shift end time by 0.1s
+        start_time = sub.start.ordinal / 1000  # Convert to seconds
+        end_time = sub.end.ordinal / 1000
         duration = end_time - start_time
         
         # Create simple centered text clip
@@ -117,7 +122,7 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
             color='white',
             stroke_color='black',
             stroke_width=4,
-            size=(text_width, clip.h),  # Width fixed, height set to video height
+            size=(text_width, clip.h),  # Width fixed, height automatic
             method='caption'
         ).with_duration(duration).with_start(start_time)
         
@@ -129,12 +134,19 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     final = CompositeVideoClip([clip, image] + txt_clips, size=clip.size)
 
     output_path = output + '.mp4'
+    # Write with explicit codec settings for better compatibility
     final.write_videofile(
-        output_path, 
+        output_path,
         fps=60,
         codec='libx264',
         audio_codec='aac',
-        audio_bitrate='192k'
+        audio_bitrate='192k',
+        preset='medium',
+        threads=4,
+        ffmpeg_params=[
+            '-pix_fmt', 'yuv420p',  # Required for compatibility
+            '-movflags', '+faststart'  # Enables streaming playback
+        ]
     )
     return output_path
     
