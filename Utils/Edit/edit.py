@@ -88,9 +88,9 @@ def trim_and_join(base_video_path, base_audio_path, image_path, output, title_te
     title_end_time = get_title_end_time(subs, title_end_idx)
     print(f"Title ends at: {title_end_time} seconds")
 
-    # Create image clip that only shows during title
+    # Create image clip that only shows during titleß
     image = ImageClip(f"{image_path}")
-    image = image.with_duration(title_end_time).with_position(("center", "center"))
+    image = image.with_duration(title_end_time - 0.25).with_position(("center", "center"))
 
     # Calculate random start time for background video
     max_start = max(0, clip.duration - audioclip.duration)
