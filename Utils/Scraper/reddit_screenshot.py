@@ -1,8 +1,12 @@
 from playwright.sync_api import sync_playwright
-from PIL import Image
+from PIL import Image, ImageOps
 import io
 import time
 import os
+
+def add_border(image, border_width=5, border_color='black'):
+    """Add a border around an image"""
+    return ImageOps.expand(image, border=border_width, fill=border_color)
 
 def take_reddit_screenshot(url, output_path='./Assets/reddit_screenshot.png'):
     # Ensure the Assets directory exists
@@ -62,8 +66,13 @@ def take_reddit_screenshot(url, output_path='./Assets/reddit_screenshot.png'):
             # Paste images one below another
             y_offset = 0
             for img in [credit_img, title_img, container_img]:
-                combined_img.paste(img, (0, y_offset))
+                # Center each image horizontally if it's narrower than max_width
+                x_offset = (max_width - img.width) // 2
+                combined_img.paste(img, (x_offset, y_offset))
                 y_offset += img.height
+
+            # Add border to the final combined image
+            combined_img = add_border(combined_img, border_width=5, border_color='black')
 
             # Save combined image
             combined_img.save(output_path)

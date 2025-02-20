@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from ..text_preprocessor import preprocess_text
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -34,6 +35,9 @@ def text_to_speech(text, output='./Assets/reddit_audio.wav', voice_id=None):
     # Use provided voice_id or fall back to default
     voice_id = voice_id or VOICE_ID
     
+    # Preprocess the text
+    processed_text = preprocess_text(text)
+    
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
     
     headers = {
@@ -43,7 +47,7 @@ def text_to_speech(text, output='./Assets/reddit_audio.wav', voice_id=None):
     }
     
     data = {
-        "text": text,
+        "text": processed_text,
         "model_id": "eleven_monolingual_v1",
         "voice_settings": {
             "stability": 0.5,
@@ -62,5 +66,5 @@ def text_to_speech(text, output='./Assets/reddit_audio.wav', voice_id=None):
         return output
         
     except requests.exceptions.RequestException as e:
-        print(f"Error generating audio: {str(e)}")
+        print(f"Error generating audio with Eleven Labs: {str(e)}")
         return None 
